@@ -15,17 +15,19 @@ import SaveIcon from '@mui/icons-material/Save';
 
 function Settings() {
   const [apiUrl, setApiUrl] = useState(
-    localStorage.getItem('api_url') || process.env.REACT_APP_API_URL || 'http://localhost:8000'
+    sessionStorage.getItem('api_url') || localStorage.getItem('api_url') || process.env.REACT_APP_API_URL || 'http://localhost:8000'
   );
-  const [apiKey, setApiKey] = useState(localStorage.getItem('api_key') || '');
+  // API key is stored in sessionStorage only (cleared on tab close) to reduce XSS exposure window.
+  const [apiKey, setApiKey] = useState(sessionStorage.getItem('api_key') || '');
   const [wsUrl, setWsUrl] = useState(
-    localStorage.getItem('ws_url') || process.env.REACT_APP_WS_URL || 'ws://localhost:8000'
+    sessionStorage.getItem('ws_url') || localStorage.getItem('ws_url') || process.env.REACT_APP_WS_URL || 'ws://localhost:8000'
   );
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const handleSave = () => {
     localStorage.setItem('api_url', apiUrl);
-    localStorage.setItem('api_key', apiKey);
+    // Store the API key in sessionStorage only — it is not persisted to localStorage.
+    sessionStorage.setItem('api_key', apiKey);
     localStorage.setItem('ws_url', wsUrl);
     setSnackbar({ open: true, message: 'تنظیمات با موفقیت ذخیره شد', severity: 'success' });
   };
@@ -39,6 +41,9 @@ function Settings() {
     localStorage.removeItem('api_url');
     localStorage.removeItem('api_key');
     localStorage.removeItem('ws_url');
+    sessionStorage.removeItem('api_key');
+    sessionStorage.removeItem('api_url');
+    sessionStorage.removeItem('ws_url');
     setSnackbar({ open: true, message: 'تنظیمات به مقادیر پیش‌فرض بازگردانده شد', severity: 'info' });
   };
 
