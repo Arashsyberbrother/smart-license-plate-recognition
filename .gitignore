@@ -106,9 +106,6 @@ Thumbs.db
 *.swo
 *~
 
-# Docker
-.dockerignore
-
 # Misc
 *.bak
 *.tmp
