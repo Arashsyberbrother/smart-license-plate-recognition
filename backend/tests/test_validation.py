@@ -52,9 +52,9 @@ class TestProvinceDetection:
         assert province == "تهران"
 
     def test_unknown_province_code(self, validator):
+        # Code 99 maps to government/military in PROVINCES dict
         province = validator.get_province("99")
-        # 99 maps to government/military
-        assert province is not None or province is None  # just no exception
+        assert province == "دولتی / نظامی"
 
     def test_all_provinces_non_empty(self):
         for code, name in PROVINCES.items():

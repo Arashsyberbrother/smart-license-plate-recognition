@@ -64,6 +64,11 @@ app.dependency_overrides[get_db] = _override_get_db
 
 @pytest.fixture(scope="session")
 async def _setup_test_db():
+    """
+    Creates schema once per test session.
+    The `async_db` fixture (function-scoped) independently creates/drops per test
+    using the same in-memory engine so both fixtures coexist safely.
+    """
     async with _test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield

@@ -135,7 +135,7 @@ class IranianPlateValidator:
                 "message": f"Valid {plate_type} plate",
             }
 
-        return self._invalid(f"Unrecognised plate format: {plate_text}")
+        return self._invalid(f"Unrecognized plate format: {plate_text}")
 
     # ------------------------------------------------------------------
 

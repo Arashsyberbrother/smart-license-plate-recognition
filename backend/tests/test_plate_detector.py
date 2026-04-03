@@ -23,7 +23,7 @@ class TestDetectorInitialization:
         assert d1 is d2
 
 
-class TestDetectReturnslist:
+class TestDetectReturnsList:
     def test_detect_returns_list(self):
         detector = PlateDetector(model_path="nonexistent_path/")
         result = detector.detect(b"fake_image_bytes")
