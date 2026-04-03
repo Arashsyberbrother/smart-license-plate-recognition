@@ -1,1 +1,115 @@
-backend/**/__pycache__
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables
+.env
+!.env.example
+
+# Logs
+*.log
+!logs/
+logs/*
+!logs/.gitkeep
+
+# Database
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+!data/
+!data/.gitkeep
+
+# Uploads
+uploads/*.png
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.gif
+uploads/*.bmp
+uploads/*.tiff
+uploads/*.webp
+!uploads/
+!uploads/.gitkeep
+
+# Models
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.bin
+models/*.safetensors
+!models/
+!models/.gitkeep
+!models/README.md
+
+# Node.js
+node_modules/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# React build
+frontend/build/
+frontend/dist/
+
+# Coverage
+*.coverage
+.coverage
+htmlcov/
+coverage/
+.nyc_output/
+coverage.xml
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Docker
+.dockerignore
+
+# Misc
+*.bak
+*.tmp
+*.temp
