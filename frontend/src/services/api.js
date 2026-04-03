@@ -33,7 +33,7 @@ apiClient.interceptors.response.use(
       error.response?.data?.detail ||
       error.response?.data?.message ||
       error.message ||
-      'خطای ناشناخته رخ داد';
+      'خطای ناشناخته رخ داد / Unknown error occurred';
     console.error('API Error:', message);
     return Promise.reject(new Error(message));
   }

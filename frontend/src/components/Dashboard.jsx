@@ -22,7 +22,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import { getDashboardStats, getPlates } from '../services/api';
 import { format } from 'date-fns';
 
-const REFRESH_INTERVAL = 30000;
+const REFRESH_INTERVAL = 30000; // 30 seconds in milliseconds
 
 function StatCard({ title, value, icon, color }) {
   return (

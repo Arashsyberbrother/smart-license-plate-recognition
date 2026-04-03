@@ -34,9 +34,10 @@ async def get_stats(db: AsyncSession = Depends(get_db)) -> DashboardStats:
     today_detections = today_result.scalar_one() or 0
 
     # Success rate
-    valid_stmt = select(func.count(PlateRecord.id)).where(PlateRecord.is_valid == True)
+    valid_stmt = select(func.count(PlateRecord.id)).where(PlateRecord.is_valid.is_(True))
     valid_result = await db.execute(valid_stmt)
     valid_count = valid_result.scalar_one() or 0
+    # success_rate is stored as a percentage (0–100)
     success_rate = round((valid_count / total_detections * 100) if total_detections else 0.0, 2)
 
     # Avg confidence and processing time

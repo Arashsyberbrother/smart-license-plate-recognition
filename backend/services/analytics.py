@@ -9,7 +9,7 @@ import logging
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List
 
-from sqlalchemy import func, select
+from sqlalchemy import Integer, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import AccessLog, PlateRecord, SystemStats
@@ -35,7 +35,7 @@ class AnalyticsService:
                 func.date(PlateRecord.created_at).label("day"),
                 func.count(PlateRecord.id).label("total"),
                 func.sum(
-                    func.cast(PlateRecord.is_valid, type_=None)
+                    func.cast(PlateRecord.is_valid, Integer)
                 ).label("valid"),
                 func.avg(PlateRecord.confidence).label("avg_confidence"),
             )
