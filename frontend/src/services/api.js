@@ -2,6 +2,12 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
+// API key is held only in module memory (never persisted to browser storage)
+// to avoid clear-text credential exposure. It must be re-entered each session.
+let _apiKey = '';
+export const setApiKey = (key) => { _apiKey = key; };
+export const clearApiKey = () => { _apiKey = ''; };
+
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -12,9 +18,8 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const apiKey = sessionStorage.getItem('api_key');
-    if (apiKey) {
-      config.headers['X-API-Key'] = apiKey;
+    if (_apiKey) {
+      config.headers['X-API-Key'] = _apiKey;
     }
     return config;
   },

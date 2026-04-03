@@ -12,23 +12,23 @@ import {
   Typography,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import { setApiKey, clearApiKey } from '../services/api';
 
 function Settings() {
   const [apiUrl, setApiUrl] = useState(
-    sessionStorage.getItem('api_url') || localStorage.getItem('api_url') || process.env.REACT_APP_API_URL || 'http://localhost:8000'
+    localStorage.getItem('api_url') || process.env.REACT_APP_API_URL || 'http://localhost:8000'
   );
-  // API key is stored in sessionStorage only (cleared on tab close) to reduce XSS exposure window.
-  const [apiKey, setApiKey] = useState(sessionStorage.getItem('api_key') || '');
+  // API key is intentionally NOT persisted; it is kept in module memory only.
+  const [apiKey, setApiKeyState] = useState('');
   const [wsUrl, setWsUrl] = useState(
-    sessionStorage.getItem('ws_url') || localStorage.getItem('ws_url') || process.env.REACT_APP_WS_URL || 'ws://localhost:8000'
+    localStorage.getItem('ws_url') || process.env.REACT_APP_WS_URL || 'ws://localhost:8000'
   );
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const handleSave = () => {
     localStorage.setItem('api_url', apiUrl);
-    // Store the API key in sessionStorage only — it is not persisted to localStorage.
-    sessionStorage.setItem('api_key', apiKey);
     localStorage.setItem('ws_url', wsUrl);
+    setApiKey(apiKey);
     setSnackbar({ open: true, message: 'تنظیمات با موفقیت ذخیره شد', severity: 'success' });
   };
 
@@ -36,14 +36,11 @@ function Settings() {
     const defaultApiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000';
     const defaultWsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:8000';
     setApiUrl(defaultApiUrl);
-    setApiKey('');
+    setApiKeyState('');
     setWsUrl(defaultWsUrl);
     localStorage.removeItem('api_url');
-    localStorage.removeItem('api_key');
     localStorage.removeItem('ws_url');
-    sessionStorage.removeItem('api_key');
-    sessionStorage.removeItem('api_url');
-    sessionStorage.removeItem('ws_url');
+    clearApiKey();
     setSnackbar({ open: true, message: 'تنظیمات به مقادیر پیش‌فرض بازگردانده شد', severity: 'info' });
   };
 
@@ -74,7 +71,7 @@ function Settings() {
                 <TextField
                   label="کلید API (اختیاری)"
                   value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
+                  onChange={(e) => setApiKeyState(e.target.value)}
                   fullWidth
                   variant="outlined"
                   type="password"
