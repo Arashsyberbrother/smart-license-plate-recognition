@@ -10,6 +10,7 @@ numpy==1.26.3
 opencv-python-headless==4.9.0.80
 easyocr==1.7.1
 ultralytics==8.1.0
+# CPU-only alternative (smaller image): pip install torch==2.1.2+cpu torchvision==0.16.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 torch==2.1.2
 torchvision==0.16.2
 websockets==12.0

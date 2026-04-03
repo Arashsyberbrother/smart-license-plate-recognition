@@ -42,10 +42,10 @@ Iranian license plates use 2-digit province codes:
 |------|---------|
 | 11 | Tehran |
 | 22 | Isfahan |
-| 33 | Mashhad |
-| 44 | Tabriz |
-| 55 | Shiraz |
-| 66 | Ahvaz |
+| 33 | Mashhad (Razavi Khorasan) |
+| 44 | East Azerbaijan (Tabriz) |
+| 55 | Shiraz (Fars) |
+| 66 | Ahvaz (Khuzestan) |
 | 77 | Kermanshah |
 
 ---
