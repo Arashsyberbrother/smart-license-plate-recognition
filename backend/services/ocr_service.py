@@ -153,7 +153,7 @@ class OCRService:
             # Resize to fixed height (64 px) preserving aspect ratio
             h, w = arr.shape[:2]
             if h == 0:
-                raise ValueError("Zero-height image")
+                raise ValueError("Invalid image: height is zero, cannot resize for OCR processing")
             target_h = 64
             target_w = max(1, int(w * target_h / h))
             resized = cv2.resize(arr, (target_w, target_h), interpolation=cv2.INTER_CUBIC)
