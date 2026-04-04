@@ -1,16 +1,21 @@
 """
-Download a YOLOv8 model pre-trained on Iranian license plates.
+Download a YOLOv8 model trained on Iranian license plates.
 
 Usage:
     cd backend
     python scripts/download_model.py
 
-The script downloads the publicly available weights from the
-ultralytics/assets release and places them in the models/ directory
-as models/best.pt so the PlateDetector can load them automatically.
+The script downloads the plate-detector.pt weights from the
+barzansaeedpour/ANPR-YOLOv8 GitHub repository (committed directly
+in-tree, MIT license) and places them in the models/ directory as
+models/best.pt so the PlateDetector can load them automatically.
 
-If you have your own Iranian-plate YOLO weights, simply copy them to
-models/best.pt and this script is not required.
+Source repository: https://github.com/barzansaeedpour/ANPR-YOLOv8
+
+Note: For OCR (reading the plate characters), the backend uses the
+hezar CRNN model `hezarai/crnn-fa-64x256-license-plate-recognition`
+which is downloaded automatically from Hugging Face on first startup.
+No manual step is required for that model.
 """
 
 from __future__ import annotations
@@ -25,12 +30,14 @@ from pathlib import Path
 # Configuration
 # ---------------------------------------------------------------------------
 
-# YOLOv8n base weights – a small, fast general-purpose detector.
-# For best accuracy on Iranian plates, replace MODEL_URL with the URL of a
-# model specifically fine-tuned on Iranian plates (e.g. trained with
-# Roboflow or custom dataset).  The base YOLOv8n weights will detect
-# license plates in many conditions without fine-tuning.
-MODEL_URL = "https://github.com/ultralytics/assets/releases/download/v8.1.0/yolov8n.pt"
+# YOLOv8m model fine-tuned for Iranian license plate detection.
+# Source: barzansaeedpour/ANPR-YOLOv8 (MIT)
+# Direct commit URL (stable, will not change even when the branch moves):
+_COMMIT = "c21d45d1c6313050b6566067a6234cb41a046d92"
+MODEL_URL = (
+    f"https://raw.githubusercontent.com/barzansaeedpour/ANPR-YOLOv8/"
+    f"{_COMMIT}/models/plate-detector.pt"
+)
 MODEL_SHA256 = ""  # Leave empty to skip checksum verification
 
 DEST_DIR = Path(__file__).resolve().parent.parent.parent / "models"
@@ -76,8 +83,10 @@ def main() -> None:
         )
         return
 
-    print(f"⬇️   Downloading model weights from:\n    {MODEL_URL}")
-    print(f"    Destination: {DEST_FILE}\n")
+    print("📥  Iranian license plate detection model")
+    print(f"    Source: barzansaeedpour/ANPR-YOLOv8 (MIT)")
+    print(f"    URL:    {MODEL_URL}")
+    print(f"    Dest:   {DEST_FILE}\n")
 
     tmp_path = DEST_FILE.with_suffix(".tmp")
     try:
@@ -86,6 +95,12 @@ def main() -> None:
         if tmp_path.exists():
             tmp_path.unlink()
         print(f"\n❌  Download failed: {exc}")
+        print(
+            "\n💡  If the download fails, manually copy the file:\n"
+            f"    1. Open https://github.com/barzansaeedpour/ANPR-YOLOv8/blob/{_COMMIT}/models/plate-detector.pt\n"
+            f"    2. Click 'Download raw file'\n"
+            f"    3. Save it to: {DEST_FILE}"
+        )
         sys.exit(1)
 
     print()  # newline after progress bar
@@ -107,8 +122,12 @@ def main() -> None:
     size_mb = DEST_FILE.stat().st_size / (1024 * 1024)
     print(f"✅  Saved to {DEST_FILE}  ({size_mb:.1f} MB)")
     print(
-        "\n💡  Tip: For better accuracy on Iranian plates, replace models/best.pt\n"
-        "    with weights fine-tuned on an Iranian plate dataset."
+        "\n💡  The OCR model (hezar CRNN) is downloaded automatically from\n"
+        "    Hugging Face on the first backend startup – no manual step needed.\n"
+        "\n    Start the backend with:\n"
+        "       docker-compose up -d\n"
+        "    or:\n"
+        "       cd backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
     )
 
 
