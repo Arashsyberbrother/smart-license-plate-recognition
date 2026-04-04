@@ -33,6 +33,7 @@ from pathlib import Path
 # YOLOv8m model fine-tuned for Iranian license plate detection.
 # Source: barzansaeedpour/ANPR-YOLOv8 (MIT)
 # Direct commit URL (stable, will not change even when the branch moves):
+# Pinned commit from 2023-11-12 (initial training run, MIT license)
 _COMMIT = "c21d45d1c6313050b6566067a6234cb41a046d92"
 MODEL_URL = (
     f"https://raw.githubusercontent.com/barzansaeedpour/ANPR-YOLOv8/"

@@ -184,9 +184,9 @@ class OCRService:
 
             arr = np.array(image.convert("RGB"))
             h, w = arr.shape[:2]
-            if h == 0:
+            if h == 0 or w == 0:
                 raise ValueError(
-                    "Invalid image: height is zero, cannot resize for OCR processing"
+                    "Invalid image: one or more dimensions are zero, cannot resize for OCR processing"
                 )
             target_h = 64
             target_w = max(1, int(w * target_h / h))

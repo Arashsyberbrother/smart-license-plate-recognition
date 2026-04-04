@@ -121,7 +121,7 @@ function Settings() {
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="body2" color="textSecondary">موتور تشخیص</Typography>
-                  <Typography variant="body2">YOLOv8 + EasyOCR</Typography>
+                  <Typography variant="body2">YOLOv8 + hezar CRNN</Typography>
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="body2" color="textSecondary">پایگاه داده</Typography>
