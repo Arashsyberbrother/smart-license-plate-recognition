@@ -137,13 +137,51 @@ class OCRService:
         return image.crop((x1, y1, x2, y2))
 
     def preprocess_for_ocr(self, image) -> "Image.Image":
-        """Enhance image for better OCR accuracy"""
+        """
+        Enhance a cropped plate image for better EasyOCR accuracy.
+        Pipeline: resize to standard height → grayscale → adaptive threshold
+        → morphological closing → sharpen.
+        Falls back to simple greyscale + sharpen if OpenCV is unavailable.
+        """
         if not _PIL_AVAILABLE:
             return image
-        # Convert to grayscale, sharpen, and enhance contrast
-        gray = ImageOps.grayscale(image)
-        sharpened = gray.filter(ImageFilter.SHARPEN)
-        return sharpened
+        try:
+            import cv2
+            import numpy as np
+
+            arr = np.array(image.convert("RGB"))
+            # Resize to fixed height (64 px) preserving aspect ratio
+            h, w = arr.shape[:2]
+            if h == 0:
+                raise ValueError("Zero-height image")
+            target_h = 64
+            target_w = max(1, int(w * target_h / h))
+            resized = cv2.resize(arr, (target_w, target_h), interpolation=cv2.INTER_CUBIC)
+
+            # Convert to grayscale
+            gray = cv2.cvtColor(resized, cv2.COLOR_RGB2GRAY)
+
+            # Adaptive thresholding works better than global Otsu on uneven lighting
+            thresh = cv2.adaptiveThreshold(
+                gray, 255,
+                cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                cv2.THRESH_BINARY,
+                blockSize=15,
+                C=8,
+            )
+
+            # Small closing to connect broken character strokes
+            kernel = np.ones((2, 2), np.uint8)
+            cleaned = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+
+            # Scale back up so EasyOCR has enough pixels to work with
+            final = cv2.resize(cleaned, (target_w * 3, target_h * 3), interpolation=cv2.INTER_NEAREST)
+            return Image.fromarray(final)
+
+        except Exception as exc:
+            logger.debug(f"Advanced OCR preprocessing failed ({exc}), using simple fallback")
+            gray = ImageOps.grayscale(image)
+            return gray.filter(ImageFilter.SHARPEN)
 
     # ------------------------------------------------------------------
     # Helpers
